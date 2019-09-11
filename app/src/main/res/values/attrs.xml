@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleView">
+        <attr name="color" format="color"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="SlideUpPanelLayout">
+        <attr name="mainView_id" format="reference" />
+        <attr name="slideView_id" format="reference" />
+        <attr name="panelHeight" format="dimension" />
+        <attr name="can_scroll_id" format="reference"/>
+    </declare-styleable>
+</resources>

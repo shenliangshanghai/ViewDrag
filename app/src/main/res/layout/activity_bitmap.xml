@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".canvas.BitmapActivity">
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/a" />
+
+    <Button
+        android:id="@+id/btn_dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="底片效果"/>
+
+    <Button
+        android:id="@+id/btn_lzp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="老照片效果"/>
+
+    <Button
+        android:id="@+id/btn_fd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="浮雕效果"/>
+
+</LinearLayout>

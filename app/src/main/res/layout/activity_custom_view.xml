@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".customview.CustomViewActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <view.shen.com.viewdemo.canvas.LayerView
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+        <view.shen.com.viewdemo.canvas.DashBoard
+            android:layout_width="300dp"
+            android:layout_height="200dp" />
+
+        <view.shen.com.viewdemo.customview.HorizontalScrollViewEx
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:background="@color/colorAccent" />
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <TextView
+                android:layout_width="500dp"
+                android:layout_height="300dp"
+                android:background="@android:color/holo_blue_dark" />
+        </view.shen.com.viewdemo.customview.HorizontalScrollViewEx>
+
+        <view.shen.com.viewdemo.customview.MySeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <view.shen.com.viewdemo.customview.CircleView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_dark" />
+
+        <view.shen.com.viewdemo.customview.CircleView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_dark" />
+
+        <view.shen.com.viewdemo.customview.CircleView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_dark" />
+
+
+        <view.shen.com.viewdemo.customview.CircleView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_dark"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp" />
+
+        <view.shen.com.viewdemo.customview.CircleView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_dark" />
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
