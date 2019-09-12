@@ -60,121 +60,121 @@
 
 
 #### 6、ViewDragHelper的使用
+##### 6.1、实例化
 ```java
-         1、实例化
-               ViewDragHelper viewDragHelper  =   ViewDragHelper.create(ViewGroup parent,ViewDragHelper.Callback callback);
-         2、与事件分发相关的
-             2.1、public boolean shouldInterceptTouchEvent(MotionEvent ev);  是否拦截事件
-                      在无事件冲突的情况下,直接使用
-                      public boolean onInterceptTouchEvent(MotionEvent ev){
-                           return viewDragHelper.shouldInterceptTouchEvent(ev);
-                      }
-              2.2、public void processTouchEvent(MotionEvent ev); 代替TouchEvent事件中的处理逻辑，内部调用Callback中的方法
-                     public boolean TouchEvent(MotionEvent ev){
-                           viewDragHelper.processEvent(ev);
-                          return true;
-                     }
+ViewDragHelper viewDragHelper  =   ViewDragHelper.create(ViewGroup parent,ViewDragHelper.Callback callback);
+```
+##### 6.2、与事件分发相关的
+###### 6.2.1、public boolean shouldInterceptTouchEvent(MotionEvent ev);  是否拦截事件,在无事件冲突的情况下,直接使用
+```java
+public boolean onInterceptTouchEvent(MotionEvent ev){
+       return viewDragHelper.shouldInterceptTouchEvent(ev);
+}
+```
+###### 6.2.2、public void processTouchEvent(MotionEvent ev); 代替TouchEvent事件中的处理逻辑，内部调用Callback中的方法
+```java
+public boolean TouchEvent(MotionEvent ev){
+      viewDragHelper.processEvent(ev);
+      return true;
+}
+```
+###### 6.3、ViewDragHelper.Callback相关
+###### 6.3.1、public boolean tryCaptureView(View child,int pointerId);根据手指触碰的位置处的View判断是否拦截事件,一般可写为
+```java
+public boolean tryCaptureView(View child,int pointerId){
+       return  child==触发拦截事件的view
+}
+```
+###### 6.3.2、public int clampViewPositionHorizontal(View view,int left,int dx)
+* 返回手指拖动过程中，left的位置，手指一旦离开屏幕将不再调用该方法
 
-          3、ViewDragHelper.Callback相关
-               3.1、public boolean tryCaptureView(View child,int pointerId);
-                         根据手指触碰的位置处的View判断是否拦截事件
-                         一般可写为
-                         public boolean tryCaptureView(View child,int pointerId){
-                                return  child==触发拦截事件的view
-                         }
+###### 6.3.3、public int clampViewPositionVertical(View view,int top,int dy)
+* 返回手指拖动过程中，top的位置，手指一旦离开屏幕将不再调用该方法
 
-                3.2、public int clampViewPositionHorizontal(View view,int left,int dx)
-                        返回手指拖动过程中，left的位置，手指一旦离开屏幕将不再调用该方法
+###### 6.3.4、public int getViewHorizontalDragRange(View child)
+* 返回横向滑动最大距离差，该值与`shouldInterceptTouchEvent`返回结果有关，该值不大于TouchSlop(最小滑动距离)的话，`shouldInterceptTouchEvent()`一直为false
 
-                 3.3、public int clampViewPositionVertical(View view,int top,int dy)
-                         返回手指拖动过程中，top的位置，手指一旦离开屏幕将不再调用该方法
+###### 6.3.5、public int getViewHorizontalDragRange(View child)
+* 返回竖向滑动最大距离差，该值与shouldInterceptTouchEvent返回结果有关，该值不大于TouchSlop(最小滑动距离)的话，shouldInterceptTouchEvent()一直为false
 
-                 3.4、public int getViewHorizontalDragRange(View child)
-                         返回横向滑动最大距离差，该值与shouldInterceptTouchEvent返回结果有关，该值不大于TouchSlop(最小滑动距离)
-                         的话，shouldInterceptTouchEvent()一直为false
-                  3.5、public int getViewHorizontalDragRange(View child)
-                          返回竖向滑动最大距离差，该值与shouldInterceptTouchEvent返回结果有关，该值不大于TouchSlop(最小滑动距离)
-                                           的话，shouldInterceptTouchEvent()一直为false
+###### 6.3.6、public void onViewRelease(View releaseChild,float xVel,float yVel);
+* 手指放开时候回调，用于处理惯性滑动
 
-                   3.6、public void onViewRelease(View releaseChild,float xVel,float yVel);
-                            手指放开时候回调，用于处理惯性滑动
+###### 6.3.7、public void  onViewPositionChanged(View changedView, int left,int top,float dx,float dy);
+* 整个滑动过程（包括惯性滑动）位置改变都会调用
 
-                    3.7、public void  onViewPositionChanged(View changedView, int left,int top,float dx,float dy);
-                             整个滑动过程（包括惯性滑动）位置改变都会调用
+###### 6.3.8、public void smoothSlidViewTo(View child,int finalLeft, int finalTop);一般用在onViewRelease方法中指定某个View滑动到某个位置,这是一个不断刷新的过程
+```java
+public void computeScroll(){
+       if(viewDragHelper.continueSettling(true)){
+          ViewCompat.postInvalidateOnAnimation(this);
+       }
+}
+```
+* continueSettling会一直回调mCallback.onViewPositionChanged
 
-                     3.8、public void smoothSlidViewTo(View child,int finalLeft, int finalTop);一般用在onViewRelease方法中
-                              指定某个View滑动到某个位置,这是一个不断刷新的过程
-                              public void computeScroll(){
-                                     if(viewDragHelper.continueSettling(true)){
-                                              ViewCompat.postInvalidateOnAnimation(this);
-                                     }
-                              }
-                              continueSettling会一直回调mCallback.onViewPositionChanged
+###### 6.3.9、public void settleCapturedViewAt(int finalLeft,int finalTop)
+* 与3.8类似，但是指定了CapturedView
 
-
-                      3.9、public void settleCapturedViewAt(int finalLeft,int finalTop)
-                              与3.8类似，但是指定了CapturedView
-
-               4、shouldInterceptTouchEvent伪代码
-                      public boolean shouldInterceptTouchEvent(MotionEvent ev){
-                              case MotionEvent.ACTION_DOWN:
-                                       初始化一些参数，这里State为IDLE
-                                       break;
-                              case MotionEvent.ACTION_MOVE:
-                                      boolean checkTouchSlop=(mCallback.getViewVerticalDragRange(child) > 0 &&Math.abs(dy)>mTouchSlop)||
-                                                                                      (mCallback.getViewHorizontalDragRange(child) > 0 &&Math.abs(dx)>mTouchSlop);
-                                      if(toCapture != null && checkTouchSlop&&mCallback.tryCaptureView()){
-                                            setDragState(STATE_DRAGGING);
-                                      }
-                                      break;
-                               case MotionEvent.ACTION_CANCEL:
-                               case MotionEvent.ACTION_UP:
-                                      setDragState(STATE_IDLE);
-                                      break
-
-                              return mDragState==STATE_DRAGGING;
-                      }
-                5、processTouchEvent伪代码
-                    public void processTouchEvent(MotionEvent ev){
-                             case MotionEvent.ACTION_DOWN:
-                                      if(mCallback.tryCaptureView()){
-                                            setDragState(STATE_DRAGGING);
-                                      }
-                                      break;
-                              case MotionEvent.ACTION_MOVE:
-                                      if (mDragState == STATE_DRAGGING) {
-                                          if (dx != 0) {
-                                                      clampedX = mCallback.clampViewPositionHorizontal(mCapturedView, left, dx);
-                                                      ViewCompat.offsetLeftAndRight(mCapturedView, clampedX - oldLeft);
-                                          }
-                                          if (dy != 0) {
-                                                      clampedY = mCallback.clampViewPositionVertical(mCapturedView, top, dy);
-                                                      ViewCompat.offsetTopAndBottom(mCapturedView, clampedY - oldTop);
-                                           }
-                                           if (dx != 0 || dy != 0) {
-                                                        final int clampedDx = clampedX - oldLeft;
-                                                         final int clampedDy = clampedY - oldTop;
-                                                         mCallback.onViewPositionChanged(mCapturedView, clampedX, clampedY,
-                                                                                                                                                         clampedDx, clampedDy);
-                                           }
-                                       }
-                                      break;
-
-                               case MotionEvent.ACTION_UP:
-                                      if (mDragState == STATE_DRAGGING) {
-                                            mCallback.onViewReleased(mCapturedView, xvel, yvel);
-                                            setDragState(STATE_IDLE);
-                                      }
-                                      break;
-                    }
+###### 6.4、shouldInterceptTouchEvent伪代码
+```java
+public boolean shouldInterceptTouchEvent(MotionEvent ev){
+      case MotionEvent.ACTION_DOWN:
+          初始化一些参数，这里State为IDLE
+        break;
+      case MotionEvent.ACTION_MOVE:
+          boolean checkTouchSlop=(mCallback.getViewVerticalDragRange(child) > 0 &&Math.abs(dy)>mTouchSlop)||
+          (mCallback.getViewHorizontalDragRange(child) > 0 &&Math.abs(dx)>mTouchSlop);
+          if(toCapture != null && checkTouchSlop&&mCallback.tryCaptureView()){
+             setDragState(STATE_DRAGGING);
+          }
+        break;
+        case MotionEvent.ACTION_CANCEL:
+        case MotionEvent.ACTION_UP:
+             setDragState(STATE_IDLE);
+        break
+        return mDragState==STATE_DRAGGING;
+      }
+```
+###### 6.5、processTouchEvent伪代码
+```java
+public void processTouchEvent(MotionEvent ev){
+      case MotionEvent.ACTION_DOWN:
+           if(mCallback.tryCaptureView()){
+              setDragState(STATE_DRAGGING);
+           }
+          break;
+      case MotionEvent.ACTION_MOVE:
+          if (mDragState == STATE_DRAGGING) {
+              if (dx != 0) {
+                  clampedX = mCallback.clampViewPositionHorizontal(mCapturedView, left, dx);
+                  ViewCompat.offsetLeftAndRight(mCapturedView, clampedX - oldLeft);
+              }
+              if (dy != 0) {
+                clampedY = mCallback.clampViewPositionVertical(mCapturedView, top, dy);
+                ViewCompat.offsetTopAndBottom(mCapturedView, clampedY - oldTop);
+              }
+              if (dx != 0 || dy != 0) {
+                final int clampedDx = clampedX - oldLeft;
+                final int clampedDy = clampedY - oldTop;
+                mCallback.onViewPositionChanged(mCapturedView, clampedX, clampedY,clampedDx, clampedDy);
+              }
+          }
+          break;
+      case MotionEvent.ACTION_UP:
+          if (mDragState == STATE_DRAGGING) {
+              mCallback.onViewReleased(mCapturedView, xvel, yvel);
+              setDragState(STATE_IDLE);
+          }
+          break;
+}
 ```
 #### 7、几个坐标相关属性之间的关系
-
-           MotionEvent事件中：
+##### 7.1、MotionEvent事件中：
            rawx,rawy:相对于屏幕坐标点
            x,y:相对于当前控件的坐标
 
-           View位置定位中：
+##### 7.2、 View位置定位中：
            x,y 是View左上角在父布局中的坐标
            left ,top,right,bottom:分别是左边，上边，右边，底部距离x轴，y轴的距离
            translateX/Y:左上角相对于父布局的偏移量
